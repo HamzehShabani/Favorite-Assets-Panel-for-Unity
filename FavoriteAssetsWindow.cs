@@ -128,8 +128,31 @@ public class FavoriteAssetsWindow : EditorWindow
 
         if (timeSinceLastClick < doubleClickTime)
         {
-            // Double-click → Open asset
-            AssetDatabase.OpenAsset(asset);
+            if (asset is SceneAsset)
+            {
+                if (EditorApplication.isPlaying)
+                {
+                    // Stop play mode first
+                    EditorApplication.isPlaying = false;
+            
+                    // Delay scene opening to ensure Play Mode fully stops
+                    EditorApplication.delayCall += () =>
+                    {
+                        string scenePath = AssetDatabase.GetAssetPath(asset);
+                        UnityEditor.SceneManagement.EditorSceneManager.OpenScene(scenePath);
+                    };
+                }
+                else
+                {
+                    // Open scene normally
+                    string scenePath = AssetDatabase.GetAssetPath(asset);
+                    UnityEditor.SceneManagement.EditorSceneManager.OpenScene(scenePath);
+                }
+            }
+            else
+            {
+                AssetDatabase.OpenAsset(asset);
+            }
         }
         else
         {
