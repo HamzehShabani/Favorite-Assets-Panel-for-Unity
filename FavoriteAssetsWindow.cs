@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
-public class FavoriteAssetsPanel : EditorWindow
+public class FavoriteAssetsWindow : EditorWindow
 {
     private List<string> favoriteAssetPaths = new List<string>(); // Store asset paths
     private Vector2 scrollPos;
@@ -17,10 +17,10 @@ public class FavoriteAssetsPanel : EditorWindow
     [MenuItem("Window/Favorite Assets")]
     public static void ShowWindow()
     {
-        FavoriteAssetsPanel panel = GetWindow<FavoriteAssetsPanel>(" Favorite Assets");
+        FavoriteAssetsWindow window = GetWindow<FavoriteAssetsWindow>(" Favorite Assets");
         Texture2D icon = EditorGUIUtility.IconContent("Favorite Icon").image as Texture2D;
-        panel.titleContent = new GUIContent(" Favorite Assets", icon);
-        panel.LoadFavorites(); // Load when opened
+        window.titleContent = new GUIContent(" Favorite Assets", icon);
+        window.LoadFavorites(); // Load when opened
     }
 
     private void OnGUI()
