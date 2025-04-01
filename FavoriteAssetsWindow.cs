@@ -134,7 +134,7 @@ public class FavoriteAssetsWindow : EditorWindow
                 {
                     // Stop play mode first
                     EditorApplication.isPlaying = false;
-            
+                    
                     // Delay scene opening to ensure Play Mode fully stops
                     EditorApplication.delayCall += () =>
                     {
@@ -153,6 +153,9 @@ public class FavoriteAssetsWindow : EditorWindow
             {
                 AssetDatabase.OpenAsset(asset);
             }
+            
+            // Reset last click time
+            lastClickTime = 0;
         }
         else
         {
