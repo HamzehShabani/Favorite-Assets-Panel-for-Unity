@@ -17,10 +17,15 @@ public class FavoriteAssetsWindow : EditorWindow
     [MenuItem("Window/Favorite Assets")]
     public static void ShowWindow()
     {
-        FavoriteAssetsWindow window = GetWindow<FavoriteAssetsWindow>(" Favorite Assets");
+        FavoriteAssetsWindow window = GetWindow<FavoriteAssetsWindow>("Favorite Assets");
         Texture2D icon = EditorGUIUtility.IconContent("Favorite Icon").image as Texture2D;
-        window.titleContent = new GUIContent(" Favorite Assets", icon);
-        window.LoadFavorites(); // Load when opened
+        window.titleContent = new GUIContent("Favorite Assets", icon);
+    }
+
+    // Called when the window is enabled (e.g., opened or re-focused)
+    private void OnEnable()
+    {
+        LoadFavorites(); // Load favorites when the window is enabled
     }
 
     private void OnGUI()
@@ -82,7 +87,7 @@ public class FavoriteAssetsWindow : EditorWindow
                 foreach (Object obj in DragAndDrop.objectReferences)
                 {
                     string path = AssetDatabase.GetAssetPath(obj);
-                    if (!favoriteAssetPaths.Contains(path))
+                    if (!string.IsNullOrEmpty(path) && !favoriteAssetPaths.Contains(path))
                         favoriteAssetPaths.Add(path);
                 }
                 SaveFavorites(); // Save after adding
@@ -176,7 +181,13 @@ public class FavoriteAssetsWindow : EditorWindow
         if (EditorPrefs.HasKey(PREF_KEY))
         {
             string savedData = EditorPrefs.GetString(PREF_KEY);
-            favoriteAssetPaths = savedData.Split(';').ToList();
+            favoriteAssetPaths = savedData.Split(';')
+                .Where(s => !string.IsNullOrEmpty(s)) // Filter out empty entries
+                .ToList();
+        }
+        else
+        {
+            favoriteAssetPaths = new List<string>(); // Ensure list is initialized
         }
     }
 }
